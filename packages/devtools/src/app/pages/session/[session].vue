@@ -25,6 +25,10 @@ function closeFlowPanel() {
   router.replace({ query: { ...route.query, module: undefined } })
 }
 
+function closeAssetPanel() {
+  router.replace({ query: { ...route.query, asset: undefined } })
+}
+
 useSideNav(() => {
   if (!session.meta)
     return []
@@ -93,12 +97,31 @@ onMounted(async () => {
         v-on-click-outside="closeFlowPanel"
         fixed right-0 bottom-0 top-20 left-20 z-panel-content
         bg-glass border="l t base rounded-tl-xl"
-        of-auto
       >
         <DataModuleDetailsLoader
           :module="(route.query.module as string)"
           :session="session"
           @close="closeFlowPanel"
+        />
+      </div>
+    </div>
+
+    <!-- for assets -->
+    <div
+      v-if="route.query.asset" fixed inset-0
+      backdrop-blur-8 backdrop-brightness-95 z-panel-content
+    >
+      <div
+        :key="(route.query.asset as string)"
+        v-on-click-outside="closeAssetPanel"
+        fixed right-0 bottom-0 top-30 z-panel-content of-auto
+        bg-glass border="l t base rounded-tl-xl"
+        class="left-20 xl:left-100 2xl:left-150"
+      >
+        <DataAssetDetailsLoader
+          :asset="(route.query.asset as string)"
+          :session="session"
+          @close="closeAssetPanel"
         />
       </div>
     </div>
