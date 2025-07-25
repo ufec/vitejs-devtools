@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div p4>
-    <div flex="~ col gap-1">
+    <div flex="~ col gap-2">
       <template v-for="asset in assets" :key="asset.id">
         <NuxtLink
           :to="{ query: { asset: asset.filename } }"
@@ -16,7 +16,9 @@ defineProps<{
         >
           <div flex="~ gap-1">
             <DisplayFileIcon :filename="asset.filename" />
-            {{ asset.filename }}
+            <span overflow-hidden text-ellipsis break-all line-clamp-2>
+              {{ asset.filename }}
+            </span>
           </div>
         </NuxtLink>
       </template>
