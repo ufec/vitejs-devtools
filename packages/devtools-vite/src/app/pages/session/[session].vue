@@ -32,19 +32,26 @@ function closeAssetPanel() {
   router.replace({ query: { ...route.query, asset: undefined } })
 }
 
+function closePluginPanel() {
+  router.replace({ query: { ...route.query, plugin: undefined } })
+}
+
 onKeyDown('Escape', (e) => {
   e.preventDefault()
 
   if (!e.isTrusted || e.repeat)
     return
 
-  const { module, asset } = route.query
+  const { module, asset, plugin } = route.query
 
   if (module)
     closeFlowPanel()
 
   if (asset)
     closeAssetPanel()
+
+  if (plugin)
+    closePluginPanel()
 })
 
 useSideNav(() => {
@@ -134,7 +141,7 @@ onMounted(async () => {
       <div
         :key="(route.query.asset as string)"
         v-on-click-outside="closeAssetPanel"
-        fixed right-0 bottom-0 top-30 z-panel-content of-auto
+        fixed right-0 bottom-0 top-30 z-panel-content of-hidden
         bg-glass border="l t base rounded-tl-xl"
         class="left-20 xl:left-100 2xl:left-150"
       >
@@ -142,6 +149,23 @@ onMounted(async () => {
           :asset="(route.query.asset as string)"
           :session="session"
           @close="closeAssetPanel"
+        />
+      </div>
+    </div>
+    <div
+      v-if="route.query.plugin" fixed inset-0
+      backdrop-blur-8 backdrop-brightness-95 z-panel-content
+    >
+      <div
+        :key="(route.query.plugin as string)"
+        v-on-click-outside="[closePluginPanel, { ignore: ['.module-type-filter'] }]"
+        fixed right-0 bottom-0 top-20 left-20 z-panel-content
+        bg-glass border="l t base rounded-tl-xl"
+      >
+        <DataPluginDetailsLoader
+          :plugin="(route.query.plugin as string)"
+          :session="session"
+          @close="closePluginPanel"
         />
       </div>
     </div>

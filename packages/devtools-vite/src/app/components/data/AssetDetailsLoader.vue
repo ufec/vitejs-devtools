@@ -20,16 +20,31 @@ const { state } = useAsyncState(
       session: props.session.id,
       id: props.asset,
     })
-    return {
-      asset: { ...res?.asset, type: 'asset' },
-      chunks: [{ ...res?.chunk, type: 'chunk' }],
-      importers: res?.importers,
-      imports: res?.imports,
-    } satisfies {
-      asset: RolldownAssetInfo
-      chunks: RolldownChunkInfo[]
-      importers: AssetInfo[]
-      imports: AssetInfo[]
+    if ('chunk' in res) {
+      return {
+        asset: { ...res?.asset, type: 'asset' },
+        chunks: [{ ...res?.chunk, type: 'chunk' }],
+        importers: res?.importers,
+        imports: res?.imports,
+      } as {
+        asset: RolldownAssetInfo
+        chunks: RolldownChunkInfo[]
+        importers: AssetInfo[]
+        imports: AssetInfo[]
+      }
+    }
+    else {
+      return {
+        asset: { ...res?.asset, type: 'asset' },
+        chunks: [],
+        importers: [],
+        imports: [],
+      } satisfies {
+        asset: RolldownAssetInfo
+        chunks: RolldownChunkInfo[]
+        importers: AssetInfo[]
+        imports: AssetInfo[]
+      }
     }
   },
   null,
@@ -37,7 +52,7 @@ const { state } = useAsyncState(
 </script>
 
 <template>
-  <div v-if="state?.asset" p4 relative h-full w-full of-auto pt12>
+  <div v-if="state?.asset" p4 relative h-full w-full of-auto pt12 bg-glass z-panel-content>
     <DisplayCloseButton
       absolute right-2 top-1.5
       @click="emit('close')"
